@@ -67,7 +67,7 @@ public static class DependencyInjection
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         
         AddDatabaseProviders(services, configuration);
-        
+
         AddCacheServices(services, configuration);
 
         AddAuthenticationServices(services, configuration);
@@ -124,22 +124,23 @@ public static class DependencyInjection
     /// Configures and registers caching services for the application.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to which the caching services will be added.</param>
-    /// <param name="configuration">
-    /// The <see cref="IConfiguration"/> instance used to retrieve the cache connection string.
-    /// </param>
+    /// <param name="configuration">The <see cref="IConfiguration"/> instance used to retrieve configuration settings.</param>
     /// <remarks>
-    /// This method sets up a Redis-based caching mechanism using StackExchange.Redis and registers
-    /// the <see cref="ICacheService"/> implementation for dependency injection.
+    /// This method sets up a Redis-based caching mechanism using StackExchange.Redis. It establishes a connection
+    /// to the Redis server, registers the <see cref="IConnectionMultiplexer"/> for dependency injection, and configures
+    /// the application to use Redis as the caching provider. Additionally, it registers the <see cref="ICacheService"/>
+    /// implementation to enable caching functionality throughout the application.
     /// </remarks>
-    /// <exception cref="ArgumentNullException">
-    /// Thrown when the cache connection string is not found in the provided <paramref name="configuration"/>.
-    /// </exception>
     private static void AddCacheServices(IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("Cache") ??
                                   throw new ArgumentNullException(nameof(configuration));
 
-        services.AddStackExchangeRedisCache(options => options.Configuration = connectionString);
+        IConnectionMultiplexer redisConnectionMultiplexer = ConnectionMultiplexer.Connect(connectionString);
+
+        services.AddSingleton(redisConnectionMultiplexer);
+        
+        services.AddStackExchangeRedisCache(options => options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnectionMultiplexer));
 
         services.AddSingleton<ICacheService, CacheService>();
     }
