@@ -1,0 +1,53 @@
+services:
+  portfolio.api:
+    image: ${DOCKER_REGISTRY-}portfolioapi
+    build:
+      context: .
+      dockerfile: src/Portfolio.Api/Dockerfile
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://portfolio.aspire-dashboard:18889
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+
+  portfolio.db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=portfolio
+      - POSTGRES_USER=portfolio_user
+      - POSTGRES_PASSWORD=9d9dfbfbfdfd@S
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  portfolio.idp:
+    image: quay.io/keycloak/keycloak:latest
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_ADMIN=satoox
+      - KEYCLOAK_ADMIN_PASSWORD=9d9dfbfbfdfd@S
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files/cipher-realm-export.json:/opt/keycloak/data/import/realm.json
+    ports:
+      - "18080:8080"
+
+  portfolio.cache:
+    image: redis:latest
+    restart: always
+    ports:
+        - "6379:6379"
+
+  portfolio.storage:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    volumes:
+      - ./.containers/object-storage/data:/data
+    ports:
+      - "10000:10000"
+    command: "azurite-blob --blobHost 0.0.0.0 -l /data"
+
+  portfolio.aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: true
+    ports:
+      - "18888:18888"
