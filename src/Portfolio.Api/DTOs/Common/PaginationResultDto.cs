@@ -1,11 +1,12 @@
 ﻿namespace Portfolio.Api.DTOs.Common;
 
-public sealed record PaginationResultDto<TModel> : ICollectionResponseDto<TModel>
+public sealed record PaginationResultDto<TModel> : ICollectionResponseDto<TModel>, ILinksResponseDto
 {
     public List<TModel> Items { get; init; }
     public int Page { get; init; }
     public int PageSize { get; init; }
     public int TotalCount { get; init; }
+    public List<LinkDto> Links { get; set; }
 
     private int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
     public bool HasPreviousPage => Page > 1;

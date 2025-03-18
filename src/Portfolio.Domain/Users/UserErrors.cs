@@ -13,7 +13,7 @@ public static class UserErrors
 {
     public static readonly Error NotFound = new(
         "User.NotFound",
-        "The specified user identifier was not found");
+        "The user with specified identifier was not found");
 
     public static readonly Error InvalidCredentials = new(
         "User.InvalidCredentials",

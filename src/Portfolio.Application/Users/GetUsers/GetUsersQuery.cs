@@ -1,5 +1,5 @@
 ﻿using Portfolio.Application.Abstractions.Caching;
-using Portfolio.Application.Users.Shared;
+using Portfolio.Application.Model.User;
 using Portfolio.Domain.Models.Common;
 
 namespace Portfolio.Application.Users.GetUsers;
@@ -12,9 +12,9 @@ namespace Portfolio.Application.Users.GetUsers;
 /// allowing the result to be cached for improved performance. The cache key is dynamically generated 
 /// based on the query parameters, and the cache expiration is set to 2 minutes.
 /// </remarks>
-public sealed record GetUsersQuery(string? Search, string? Sort, string? Field, int? Page, int? PageSize) : ICachedQuery<PaginationResult<UserResponse>>
+public sealed record GetUsersQuery(string? Search, string? Sort, string? Fields, int? Page, int? PageSize) : ICachedQuery<PaginationResult<UserDto>>
 {
-    public string CacheKey => $"{nameof(GetUsersQuery)}-{Search}-{Sort}-{Field}-{Page}-{PageSize}";
+    public string CacheKey => $"{nameof(GetUsersQuery)}-{Search}-{Sort}-{Fields}-{Page}-{PageSize}";
 
     public TimeSpan? Expiration => TimeSpan.FromMinutes(2);
 }

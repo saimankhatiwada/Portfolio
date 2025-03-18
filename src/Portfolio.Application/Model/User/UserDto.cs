@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.DTOs.User;
+﻿namespace Portfolio.Application.Model.User;
 
 public sealed record UserDto
 {

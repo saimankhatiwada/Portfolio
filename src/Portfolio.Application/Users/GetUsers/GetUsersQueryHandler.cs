@@ -1,5 +1,5 @@
 ﻿using Portfolio.Application.Abstractions.Messaging;
-using Portfolio.Application.Users.Shared;
+using Portfolio.Application.Model.User;
 using Portfolio.Domain.Abstractions;
 using Portfolio.Domain.Models.Common;
 using Portfolio.Domain.Users;
@@ -13,7 +13,7 @@ namespace Portfolio.Application.Users.GetUsers;
 /// This class implements the <see cref="IQueryHandler{TQuery, TResponse}"/> interface, where the query is of type <see cref="GetUsersQuery"/>
 /// and the response is a <see cref="Result{TResponse}"/> containing a read-only list of <see cref="User"/> entities.
 /// </remarks>
-internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, PaginationResult<UserResponse>>
+internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, PaginationResult<UserDto>>
 {
     private readonly IUserRepository _userRepository;
 
@@ -34,12 +34,17 @@ internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, Pagina
     /// <remarks>
     /// This method interacts with the <see cref="IUserRepository"/> to fetch user data based on the provided query parameters.
     /// </remarks>
-    public async Task<Result<PaginationResult<UserResponse>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginationResult<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         Result<PaginationResult<User>> result = await _userRepository
-            .GetAllAsync(request.Search, request.Sort, request.Field, request.Page ?? 1, request.PageSize ?? 10, cancellationToken);
+            .GetAllAsync(request.Search, request.Sort, request.Page ?? 1, request.PageSize ?? 10, cancellationToken);
 
-        var userResponses = result.Value.Items.Select(user => new UserResponse()
+        if (result.IsFailure)
+        {
+            return Result.Failure<PaginationResult<UserDto>>(result.Error);
+        }
+
+        var userResponses = result.Value.Items.Select(user => new UserDto()
         {
             Id = user.Id.Value,
             Email = user.Email.Value,
@@ -48,12 +53,12 @@ internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, Pagina
             Roles = user.Roles.Select(role => role.Name).ToList()
         }).ToList();
 
-        var paginatedUserResponses = PaginationResult<UserResponse>.Create(
+        var paginatedUserResponses = PaginationResult<UserDto>.Create(
             userResponses, 
             result.Value.Page, 
             result.Value.PageSize, 
             result.Value.TotalCount);
 
-        return result.IsSuccess ? paginatedUserResponses : Result.Failure<PaginationResult<UserResponse>>(result.Error);
+        return paginatedUserResponses;
     }
 }

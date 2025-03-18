@@ -45,7 +45,7 @@ internal abstract class Repository<TEntity, TEntityId>
     /// This method queries the database context to locate an entity of type <typeparamref name="TEntity"/>
     /// with the specified identifier. If no matching entity is found, the method returns <c>null</c>.
     /// </remarks>
-    public async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default)
+    public virtual async Task<TEntity?> GetByIdAsync(TEntityId id, CancellationToken cancellationToken = default)
     {
         return await DbContext
             .Set<TEntity>()

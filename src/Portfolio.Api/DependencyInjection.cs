@@ -5,6 +5,7 @@ using Portfolio.Api.MediaTypes;
 using Portfolio.Application;
 using Portfolio.Infrastructure;
 using Portfolio.Api.Swagger;
+using Portfolio.Api.Services;
 
 namespace Portfolio.Api;
 
@@ -34,6 +35,9 @@ internal static class DependencyInjection
         ConfigureApplicationAndInfrastructure(builder);
 
         ConfigureSwagger(builder);
+
+        builder.Services.AddTransient<DataShapingService>();
+        builder.Services.AddTransient<LinkService>();
 
         return builder;
     }
