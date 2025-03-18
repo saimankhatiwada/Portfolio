@@ -25,4 +25,6 @@ public interface IAuthenticationService
     /// It returns a result encapsulating the success or failure of the operation.
     /// </remarks>
     Task<Result<string>> RegisterAsync(User user, string password, CancellationToken cancellationToken = default);
+    
+    Task<Result> DeleteUserAsync(string identityId, CancellationToken  cancellationToken = default);
 }

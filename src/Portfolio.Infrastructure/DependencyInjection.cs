@@ -139,8 +139,10 @@ public static class DependencyInjection
         IConnectionMultiplexer redisConnectionMultiplexer = ConnectionMultiplexer.Connect(connectionString);
 
         services.AddSingleton(redisConnectionMultiplexer);
-        
+
         services.AddStackExchangeRedisCache(options => options.ConnectionMultiplexerFactory = () => Task.FromResult(redisConnectionMultiplexer));
+
+        //services.AddStackExchangeRedisCache(options => options.Configuration = connectionString);
 
         services.AddSingleton<ICacheService, CacheService>();
     }
@@ -170,12 +172,12 @@ public static class DependencyInjection
         services.AddTransient<AdminAuthorizationDelegatingHandler>();
 
         services.AddHttpClient<IAuthenticationService, AuthenticationService>((serviceProvider, httpClient) =>
-            {
-                KeycloakOptions keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
+        {
+            KeycloakOptions keycloakOptions = serviceProvider.GetRequiredService<IOptions<KeycloakOptions>>().Value;
 
-                httpClient.BaseAddress = new Uri(keycloakOptions.AdminUrl);
-            })
-            .AddHttpMessageHandler<AdminAuthorizationDelegatingHandler>();
+            httpClient.BaseAddress = new Uri(keycloakOptions.AdminUrl);
+        })
+        .AddHttpMessageHandler<AdminAuthorizationDelegatingHandler>();
 
         services.AddHttpClient<IJwtService, JwtService>((serviceProvider, httpClient) =>
         {

@@ -29,5 +29,5 @@ public static class UserErrors
 
     public static readonly Error KeycloakServerError = new(
         "User.KeycloakServerError",
-        "Keycloak server error occured while creating user");
+        "Keycloak server error occured while processing");
 }

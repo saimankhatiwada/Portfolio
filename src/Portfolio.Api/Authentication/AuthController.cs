@@ -3,11 +3,10 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Portfolio.Api.DTOs.Auth.Login;
-using Portfolio.Api.DTOs.Auth.Register;
-using Portfolio.Api.DTOs.Auth.RenewToken;
 using Portfolio.Api.MediaTypes;
-using Portfolio.Application.Abstractions.Authentication;
+using Portfolio.Application.Model.Auth.Login;
+using Portfolio.Application.Model.Auth.Refresh;
+using Portfolio.Application.Model.Auth.Register;
 using Portfolio.Application.Users.LogInUser;
 using Portfolio.Application.Users.RegisterUser;
 using Portfolio.Application.Users.RenewAuthorization;
@@ -78,10 +77,10 @@ public class AuthController : ControllerBase
     {
         var command = new LogInUserCommand(request.Email, request.Password);
 
-        Result<AuthorizationToken> result = await _sender.Send(command, cancellationToken);
+        Result<AuthorizationTokenDto> result = await _sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? 
-            Ok(LoginMappings.ToDto(result.Value)) : 
+            Ok(result.Value) : 
             Problem(
                 statusCode: StatusCodes.Status401Unauthorized, 
                 detail: result.Error.Message);
@@ -169,10 +168,10 @@ public class AuthController : ControllerBase
     {
         var command = new RenewAuthorizationCommand(request.RefreshToken);
 
-        Result<AuthorizationToken> result = await _sender.Send(command, cancellationToken);
+        Result<AuthorizationTokenDto> result = await _sender.Send(command, cancellationToken);
 
         return result.IsSuccess ?
-            Ok(LoginMappings.ToDto(result.Value)) :
+            Ok(result.Value) :
             Problem(
                 statusCode: StatusCodes.Status400BadRequest,
                 detail: result.Error.Message);

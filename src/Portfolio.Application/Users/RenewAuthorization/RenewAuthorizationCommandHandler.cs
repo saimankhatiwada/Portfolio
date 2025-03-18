@@ -1,5 +1,6 @@
 ﻿using Portfolio.Application.Abstractions.Authentication;
 using Portfolio.Application.Abstractions.Messaging;
+using Portfolio.Application.Model.Auth.Login;
 using Portfolio.Domain.Abstractions;
 using Portfolio.Domain.Users;
 
@@ -7,7 +8,7 @@ namespace Portfolio.Application.Users.RenewAuthorization;
 
 /// <summary>
 /// Handles the renewal of authorization tokens by processing a <see cref="RenewAuthorizationCommand"/> 
-/// and returning an <see cref="AuthorizationToken"/>.
+/// and returning an <see cref="AuthorizationTokenDto"/>.
 /// </summary>
 /// <remarks>
 /// This command handler utilizes the <see cref="IJwtService"/> to renew authorization tokens 
@@ -15,7 +16,7 @@ namespace Portfolio.Application.Users.RenewAuthorization;
 /// interface, ensuring compatibility with the MediatR pipeline and encapsulating the result in a 
 /// <see cref="Result{TValue}"/> object.
 /// </remarks>
-internal sealed class RenewAuthorizationCommandHandler : ICommandHandler<RenewAuthorizationCommand, AuthorizationToken>
+internal sealed class RenewAuthorizationCommandHandler : ICommandHandler<RenewAuthorizationCommand, AuthorizationTokenDto>
 {
     private readonly IJwtService _jwtService;
 
@@ -34,7 +35,7 @@ internal sealed class RenewAuthorizationCommandHandler : ICommandHandler<RenewAu
     /// A token to monitor for cancellation requests.
     /// </param>
     /// <returns>
-    /// A <see cref="Result{TValue}"/> containing the renewed <see cref="AuthorizationToken"/> if successful, 
+    /// A <see cref="Result{TValue}"/> containing the renewed <see cref="AuthorizationTokenDto"/> if successful, 
     /// or a failure result with the appropriate error if the operation fails.
     /// </returns>
     /// <exception cref="InvalidOperationException">
@@ -45,10 +46,12 @@ internal sealed class RenewAuthorizationCommandHandler : ICommandHandler<RenewAu
     /// refresh token and generate a new authorization token. If the operation fails, it returns a failure 
     /// result with the <see cref="UserErrors.RefreshToken"/> error.
     /// </remarks>
-    public async Task<Result<AuthorizationToken>> Handle(RenewAuthorizationCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AuthorizationTokenDto>> Handle(RenewAuthorizationCommand request, CancellationToken cancellationToken)
     {
         Result<AuthorizationToken> result = await _jwtService.RenewAuthorizationTokenAsync(request.RefreshToken, cancellationToken);
 
-        return result.IsSuccess ? result.Value : Result.Failure<AuthorizationToken>(UserErrors.RefreshToken);
+        return result.IsSuccess 
+            ? AuthorizationTokenMappings.ToDto(result.Value) 
+            : Result.Failure<AuthorizationTokenDto>(UserErrors.RefreshToken);
     }
 }

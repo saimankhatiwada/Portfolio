@@ -12,7 +12,6 @@ namespace Portfolio.Application.Users.RegisterUser;
 /// This class coordinates the user registration process by utilizing the authentication service, 
 /// user repository, and unit of work to ensure the user is registered and persisted correctly.
 /// </remarks>
-/// <seealso cref="Portfolio.Application.Abstractions.Messaging.ICommandHandler{RegisterUserCommand, string}"/>
 internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand, string>
 {
     private readonly IAuthenticationService _authenticationService;

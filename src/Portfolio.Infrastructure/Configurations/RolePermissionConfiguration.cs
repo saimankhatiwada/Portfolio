@@ -48,6 +48,11 @@ internal sealed class RolePermissionConfiguration : IEntityTypeConfiguration<Rol
             new RolePermission
             {
                 RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.UsersReadSingle.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
                 PermissionId = Permission.UsersUpdate.Id
             },
             new RolePermission

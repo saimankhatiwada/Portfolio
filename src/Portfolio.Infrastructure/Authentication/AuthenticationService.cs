@@ -78,6 +78,27 @@ internal sealed class AuthenticationService : IAuthenticationService
         }
     }
 
+    public async Task<Result> DeleteUserAsync(string identityId, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            HttpResponseMessage result = await _httpClient.DeleteAsync($"users/{identityId}", cancellationToken);
+
+            result.EnsureSuccessStatusCode();
+            
+            return Result.Success();
+        }
+        catch (HttpRequestException e) 
+            when (e.StatusCode == HttpStatusCode.NotFound)
+        {
+            return Result.Failure(UserErrors.NotFound);
+        }
+        catch (HttpRequestException)
+        {
+            return Result.Failure(UserErrors.KeycloakServerError);
+        }
+    }
+
     /// <summary>
     /// Extracts the unique identity identifier from the <c>Location</c> header of an HTTP response.
     /// </summary>

@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.DTOs.Common;
+﻿namespace Portfolio.Api.Model.Common;
 
 public sealed record PaginationResultDto<TModel> : ICollectionResponseDto<TModel>, ILinksResponseDto
 {

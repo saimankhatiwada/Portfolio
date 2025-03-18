@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.DTOs.Common;
+﻿namespace Portfolio.Api.Model.Common;
 
 public interface ILinksResponseDto
 {

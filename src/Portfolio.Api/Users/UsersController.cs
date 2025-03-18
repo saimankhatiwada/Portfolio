@@ -3,11 +3,12 @@ using System.Net.Mime;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Portfolio.Api.DTOs.Common;
 using Portfolio.Api.MediaTypes;
+using Portfolio.Api.Model.Common;
 using Portfolio.Api.Services;
 using Portfolio.Api.Utils;
 using Portfolio.Application.Model.User;
+using Portfolio.Application.Users.DeleteUser;
 using Portfolio.Application.Users.GetUser;
 using Portfolio.Application.Users.GetUsers;
 using Portfolio.Domain.Abstractions;
@@ -17,6 +18,9 @@ using Portfolio.Infrastructure.Authorization;
 
 namespace Portfolio.Api.Users;
 
+/// <summary>
+/// Represents a controller that handles user-related operations in the API.
+/// </summary>
 [ApiController]
 [ApiVersion(1)]
 [Route("users")]
@@ -37,7 +41,17 @@ public class UsersController : ControllerBase
         _linkService = linkService;
     }
 
+    /// <summary>
+    /// Retrieves a paginated list of users based on the specified query parameters.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint supports data shaping and pagination. The <c>Fields</c> parameter can be used to specify
+    /// the properties to include in the response. If <c>application/vnd.portfolio.hateoas+json</c> is used, HATEOAS links
+    /// will be included in the response. This endpoint requires <c>users:read</c> permission.
+    /// </remarks>
     [HttpGet]
+    [ProducesResponseType<PaginationResultDto<UserDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HasPermission(Permissions.UsersRead)]
     public async Task<IActionResult> GetUsers([FromQuery] UsersQueryParameters request, CancellationToken cancellationToken)
     {
@@ -81,8 +95,19 @@ public class UsersController : ControllerBase
 
     }
 
+    /// <summary>
+    /// Retrieves a user by their unique identifier.
+    /// </summary>
+    /// <remarks>
+    /// This endpoint supports data shaping. The <c>Fields</c> parameter can be used to specify
+    /// the properties to include in the response. If <c>application/vnd.portfolio.hateoas+json</c> is used, HATEOAS links
+    /// will be included in the response. This endpoint requires <c>users:read-single</c> permission.
+    /// </remarks>
     [HttpGet("{id}")]
-    [HasPermission(Permissions.UsersRead)]
+    [ProducesResponseType<UserDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HasPermission(Permissions.UsersReadSingle)]
 #pragma warning disable CA1721
     public async Task<IActionResult> GetUser(string id, [FromQuery] UserQueryParameters queryParameters, CancellationToken cancellationToken)
 #pragma warning restore CA1721
@@ -98,7 +123,8 @@ public class UsersController : ControllerBase
 
         Result<UserDto> result = await _sender.Send(query, cancellationToken);
 
-        if (result.IsFailure && string.Equals(result.Error.Code, UserErrors.NotFound.Code, StringComparison.OrdinalIgnoreCase))
+        if (result.IsFailure 
+            && string.Equals(result.Error.Code, UserErrors.NotFound.Code, StringComparison.OrdinalIgnoreCase))
         {
             return Problem(
                 statusCode: StatusCodes.Status404NotFound,
@@ -116,6 +142,36 @@ public class UsersController : ControllerBase
         return result.IsSuccess ? Ok(shapedUserDto) : Problem(
             statusCode: StatusCodes.Status400BadRequest,
             detail: result.Error.Message);
+    }
+
+    /// <summary>
+    /// Deletes a user with the specified identifier.
+    /// </summary>
+    /// <remarks>
+    /// This operation requires the <c>users:delete</c> permission.
+    /// </remarks>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HasPermission(Permissions.UsersDelete)]
+    public async Task<ActionResult> DeleteUser(string id, CancellationToken cancellationToken = default)
+    {
+        var command = new DeleteUserCommand(id);
+
+        Result<Result> result = await _sender.Send(command, cancellationToken);
+
+        return result.Value.IsSuccess
+            ? NoContent()
+            : result.Value.Error.Code switch
+            {
+                "User.NotFound" => Problem(
+                    statusCode: StatusCodes.Status404NotFound, 
+                    detail: result.Value.Error.Message),
+                _ => Problem(
+                    statusCode: StatusCodes.Status400BadRequest, 
+                    detail: result.Value.Error.Message)
+            };
     }
 
     private List<LinkDto> CreateLinksForUsers(UsersQueryParameters usersQueryParameters, bool hasNextPage, bool hasPreviousPage)
@@ -163,7 +219,8 @@ public class UsersController : ControllerBase
     {
         List<LinkDto> links =
         [
-            _linkService.Create(nameof(GetUser), "self", HttpMethods.Get, new { id, fields })
+            _linkService.Create(nameof(GetUser), "self", HttpMethods.Get, new { id, fields }),
+            _linkService.Create(nameof(DeleteUser), "delete", HttpMethods.Delete, new { id })
         ];
 
         return links;

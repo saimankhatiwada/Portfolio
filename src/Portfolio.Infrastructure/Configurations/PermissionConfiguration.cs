@@ -38,6 +38,7 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
         builder.HasData(
             Permission.UsersReadSelf,
             Permission.UsersRead,
+            Permission.UsersReadSingle,
             Permission.UsersUpdate,
             Permission.UsersDelete);
     }

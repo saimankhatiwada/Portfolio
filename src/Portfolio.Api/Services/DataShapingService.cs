@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Dynamic;
 using System.Reflection;
-using Portfolio.Api.DTOs.Common;
+using Portfolio.Api.Model.Common;
 
 namespace Portfolio.Api.Services;
 
