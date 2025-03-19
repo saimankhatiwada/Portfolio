@@ -1,12 +1,5 @@
 ﻿namespace Portfolio.Infrastructure.Authentication.Models;
 
-/// <summary>
-/// Represents a model for credential information used in authentication processes.
-/// </summary>
-/// <remarks>
-/// This class encapsulates various properties related to credentials, such as algorithm, configuration, 
-/// hashed and salted values, and other metadata required for authentication.
-/// </remarks>
 internal sealed class CredentialRepresentationModel
 {
     public string Algorithm { get; set; }

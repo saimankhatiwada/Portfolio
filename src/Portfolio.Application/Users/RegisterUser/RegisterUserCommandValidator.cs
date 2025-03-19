@@ -3,16 +3,6 @@ using Portfolio.Domain.Users;
 
 namespace Portfolio.Application.Users.RegisterUser;
 
-/// <summary>
-/// Validates the <see cref="RegisterUserCommand"/> to ensure all required properties meet the specified criteria.
-/// </summary>
-/// <remarks>
-/// This validator enforces rules for the <see cref="RegisterUserCommand"/>, such as:
-/// - Ensuring the first name, last name, email, password, and role are not empty.
-/// - Validating the email format.
-/// - Enforcing password complexity requirements.
-/// - Checking the validity of the role.
-/// </remarks>
 internal sealed class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
     public RegisterUserCommandValidator()
@@ -41,19 +31,6 @@ internal sealed class RegisterUserCommandValidator : AbstractValidator<RegisterU
             .Must(CheckRoleExist)
             .WithMessage("Role is invalid.");
     }
-
-    /// <summary>
-    /// Checks if the specified role exists within the predefined roles.
-    /// </summary>
-    /// <param name="value">The name of the role to validate.</param>
-    /// <returns>
-    /// <see langword="true"/> if the role exists and is valid; otherwise, <see langword="false"/>.
-    /// </returns>
-    /// <remarks>
-    /// This method uses <see cref="Role.CheckRole"/> to determine if the provided role name corresponds
-    /// to a valid predefined role. A role is considered valid if it is not null, empty, or whitespace
-    /// and matches one of the predefined roles.
-    /// </remarks>
     private static bool CheckRoleExist(string value)
     {
         return !string.IsNullOrWhiteSpace(Role.CheckRole(value).Name);

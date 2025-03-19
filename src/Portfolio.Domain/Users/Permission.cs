@@ -1,15 +1,5 @@
 ﻿namespace Portfolio.Domain.Users;
 
-/// <summary>
-/// Represents a domain-specific permission, defining actions or access rights
-/// that can be granted to roles or users.
-/// </summary>
-/// <remarks>
-/// The <see cref="Permission"/> class models a permission with a unique identifier
-/// and a descriptive name. It includes predefined static instances for common actions,
-/// such as reading, updating, or deleting user data. This class is immutable,
-/// ensuring permissions are consistently defined and uniquely identifiable.
-/// </remarks>
 public sealed class Permission
 {
     public static readonly Permission UsersReadSelf = new(1, "users:read-self");
@@ -23,8 +13,7 @@ public sealed class Permission
         Id = id;
         Name = name;
     }
-
+    
     public int Id { get; init; }
-
     public string Name { get; init; }
 }

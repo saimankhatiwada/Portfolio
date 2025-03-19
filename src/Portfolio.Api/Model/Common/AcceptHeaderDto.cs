@@ -2,7 +2,7 @@
 using Microsoft.Net.Http.Headers;
 using Portfolio.Api.MediaTypes;
 
-namespace Portfolio.Api.DTOs.Common;
+namespace Portfolio.Api.Model.Common;
 
 public record AcceptHeaderDto
 {

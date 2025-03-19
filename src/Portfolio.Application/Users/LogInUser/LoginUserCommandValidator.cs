@@ -2,14 +2,6 @@
 
 namespace Portfolio.Application.Users.LogInUser;
 
-/// <summary>
-/// Validates the <see cref="LogInUserCommand"/> to ensure that the provided email and password meet the required criteria.
-/// </summary>
-/// <remarks>
-/// This validator ensures that the email is not empty and follows a valid email format.
-/// Additionally, it enforces password requirements, such as containing at least one uppercase letter, one digit,
-/// one special character, and being at least 8 characters long.
-/// </remarks>
 internal sealed class LoginUserCommandValidator : AbstractValidator<LogInUserCommand>
 {
     public LoginUserCommandValidator()

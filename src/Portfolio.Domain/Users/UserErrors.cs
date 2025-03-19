@@ -2,13 +2,6 @@
 
 namespace Portfolio.Domain.Users;
 
-/// <summary>
-/// Defines a set of standardized errors associated with user operations.
-/// </summary>
-/// <remarks>
-/// This class provides static instances of the <see cref="Error"/> type, representing common user-related issues.
-/// Examples include user not found, invalid credentials, email conflicts, and server-related errors.
-/// </remarks>
 public static class UserErrors
 {
     public static readonly Error NotFound = new(

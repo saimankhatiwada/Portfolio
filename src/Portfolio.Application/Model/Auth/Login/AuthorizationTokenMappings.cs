@@ -2,7 +2,7 @@
 
 namespace Portfolio.Application.Model.Auth.Login;
 
-internal sealed class AuthorizationTokenMappings
+internal static class AuthorizationTokenMappings
 {
     public static AuthorizationTokenDto ToDto(AuthorizationToken authorizationToken)
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Portfolio.Api.DTOs.Common;
+using Portfolio.Api.Model.Common;
 
 namespace Portfolio.Api.Users;
 

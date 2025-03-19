@@ -2,13 +2,6 @@
 
 namespace Portfolio.Infrastructure.Authentication.Models;
 
-/// <summary>
-/// Represents a user model used for authentication and user management purposes.
-/// </summary>
-/// <remarks>
-/// This class encapsulates various properties related to a user, such as access permissions, attributes, 
-/// roles, credentials, and other metadata required for managing user authentication and identity.
-/// </remarks>
 internal sealed class UserRepresentationModel
 {
     public Dictionary<string, string> Access { get; set; }
@@ -32,18 +25,6 @@ internal sealed class UserRepresentationModel
     public string Self { get; set; }
     public string ServiceAccountClientId { get; set; }
     public string Username { get; set; }
-    /// <summary>
-    /// Creates a new instance of <see cref="UserRepresentationModel"/> from a given <see cref="User"/> domain entity.
-    /// </summary>
-    /// <param name="user">The <see cref="User"/> domain entity containing user details.</param>
-    /// <returns>
-    /// A new instance of <see cref="UserRepresentationModel"/> populated with data from the provided <see cref="User"/>.
-    /// </returns>
-    /// <remarks>
-    /// This method maps the properties of the <see cref="User"/> domain entity to the corresponding properties
-    /// of the <see cref="UserRepresentationModel"/>. It initializes default values for certain properties
-    /// such as <see cref="Enabled"/>, <see cref="EmailVerified"/>, and <see cref="CreatedTimestamp"/>.
-    /// </remarks>
     internal static UserRepresentationModel FromUser(User user) =>
         new()
         {
