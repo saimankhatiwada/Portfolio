@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Portfolio.Api.MediaTypes;
 using Portfolio.Application;
@@ -27,13 +28,17 @@ internal static class DependencyInjection
 
     private static void ConfigureMvcServices(WebApplicationBuilder builder)
     {
-        builder.Services.AddControllers(options =>
-            {
-                options.ReturnHttpNotAcceptable = true;
-            })
-            .AddNewtonsoftJson(options => 
-                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver())
-            .AddXmlSerializerFormatters();
+        builder.Services
+        .AddControllers(options =>
+        {
+            options.ReturnHttpNotAcceptable = true;
+        })
+        .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+        })
+        .AddXmlSerializerFormatters();
 
         builder.Services.Configure<MvcOptions>(options =>
         {

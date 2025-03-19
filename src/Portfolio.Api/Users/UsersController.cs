@@ -11,6 +11,7 @@ using Portfolio.Application.Model.User;
 using Portfolio.Application.Users.DeleteUser;
 using Portfolio.Application.Users.GetUser;
 using Portfolio.Application.Users.GetUsers;
+using Portfolio.Application.Users.UpdateUser;
 using Portfolio.Domain.Abstractions;
 using Portfolio.Domain.Models.Common;
 using Portfolio.Domain.Users;
@@ -139,9 +140,37 @@ public class UsersController : ControllerBase
                 CreateLinksForUser(id, query.Fields);
         }
 
-        return result.IsSuccess ? Ok(shapedUserDto) : Problem(
-            statusCode: StatusCodes.Status400BadRequest,
-            detail: result.Error.Message);
+        return Ok(shapedUserDto);
+    }
+
+    /// <summary>
+    /// Updates a user with the specified identifier.
+    /// </summary>
+    /// <remarks>
+    /// This operation requires the <c>users:update</c> permission.
+    /// </remarks>
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [HasPermission(Permissions.UsersUpdate)]
+    public async Task<ActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updateUserDto, CancellationToken cancellationToken = default)
+    {
+        var command = new UpdateUserCommand(id, updateUserDto.FirstName, updateUserDto.LastName, updateUserDto.Email);
+
+        Result<Result> result = await _sender.Send(command, cancellationToken);
+
+        return result.Value.IsSuccess
+            ? NoContent()
+            : result.Value.Error.Code switch
+            {
+                "User.NotFound" => Problem(
+                    statusCode: StatusCodes.Status404NotFound,
+                    detail: result.Value.Error.Message),
+                _ => Problem(
+                    statusCode: StatusCodes.Status400BadRequest,
+                    detail: result.Value.Error.Message)
+            };
     }
 
     /// <summary>
@@ -220,6 +249,7 @@ public class UsersController : ControllerBase
         List<LinkDto> links =
         [
             _linkService.Create(nameof(GetUser), "self", HttpMethods.Get, new { id, fields }),
+            _linkService.Create(nameof(UpdateUser), "update", HttpMethods.Put, new { id }),
             _linkService.Create(nameof(DeleteUser), "delete", HttpMethods.Delete, new { id })
         ];
 

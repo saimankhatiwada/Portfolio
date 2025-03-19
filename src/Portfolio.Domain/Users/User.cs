@@ -30,6 +30,14 @@ public sealed class User: Entity<UserId>
 
         return user;
     }
+
+    public void UpdateUser(FirstName firstName, LastName lastName, Email email)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+    }
+    
     public void SetIdentityId(string identityId)
     {
         IdentityId = identityId;
