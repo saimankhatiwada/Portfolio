@@ -14,7 +14,7 @@ app.UseSwaggerUI();
 
 app.MapScalarApiReference(options =>
 {
-    options.WithTheme(ScalarTheme.Mars);
+    options.WithTheme(ScalarTheme.BluePlanet);
     options.WithOpenApiRoutePattern("/swagger/1.0/swagger.json");
 });
 
@@ -34,3 +34,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.RunAsync();
+
+public partial class Program;

@@ -20,7 +20,7 @@ using Portfolio.Infrastructure.Authorization;
 namespace Portfolio.Api.Users;
 
 /// <summary>
-/// Represents a controller that handles user-related operations in the API.
+/// Represents endpoints that handles user-related operations.
 /// </summary>
 [ApiController]
 [ApiVersion(1)]
