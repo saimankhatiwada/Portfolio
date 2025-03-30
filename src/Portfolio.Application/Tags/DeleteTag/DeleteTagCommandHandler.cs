@@ -1,5 +1,4 @@
-﻿using Portfolio.Application.Abstractions.Caching;
-using Portfolio.Application.Abstractions.Messaging;
+﻿using Portfolio.Application.Abstractions.Messaging;
 using Portfolio.Domain.Abstractions;
 using Portfolio.Domain.Tags;
 
@@ -8,13 +7,11 @@ namespace Portfolio.Application.Tags.DeleteTag;
 internal sealed class DeleteTagCommandHandler : ICommandHandler<DeleteTagCommand, Result>
 {
     private readonly ITagRepository _tagRepository;
-    private readonly ICacheService _cacheService;
     private readonly IUnitOfWork _unitOfWork;
 
-    public DeleteTagCommandHandler(ITagRepository tagRepository, ICacheService cacheService, IUnitOfWork unitOfWork)
+    public DeleteTagCommandHandler(ITagRepository tagRepository, IUnitOfWork unitOfWork)
     {
         _tagRepository = tagRepository;
-        _cacheService = cacheService;
         _unitOfWork = unitOfWork;
     }
 
