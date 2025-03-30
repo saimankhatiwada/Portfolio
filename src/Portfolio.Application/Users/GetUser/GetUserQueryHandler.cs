@@ -18,6 +18,6 @@ internal sealed class GetUserQueryHandler : IQueryHandler<GetUserQuery, UserDto>
     {
         User? user = await _userRepository.GetByIdAsync(new UserId(request.Id), cancellationToken);
 
-        return user != null ? UserMappings.ToDto(user) : Result.Failure<UserDto>(UserErrors.NotFound);
+        return user is not null ? UserMappings.ToDto(user) : Result.Failure<UserDto>(UserErrors.NotFound);
     }
 }

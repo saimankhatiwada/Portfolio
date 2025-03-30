@@ -20,6 +20,16 @@ internal sealed class RolePermissionConfiguration : IEntityTypeConfiguration<Rol
             },
             new RolePermission
             {
+                RoleId = Role.Registered.Id,
+                PermissionId = Permission.BlogsRead.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.Registered.Id,
+                PermissionId = Permission.BlogsReadSingle.Id
+            },
+            new RolePermission
+            {
                 RoleId = Role.SuperAdmin.Id,
                 PermissionId = Permission.UsersReadSelf.Id
             },
@@ -42,6 +52,56 @@ internal sealed class RolePermissionConfiguration : IEntityTypeConfiguration<Rol
             {
                 RoleId = Role.SuperAdmin.Id,
                 PermissionId = Permission.UsersDelete.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.TagsRead.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.TagsReadSingle.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.TagsAdd.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.TagsUpdate.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.TagsDelete.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.BlogsRead.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.BlogsReadSingle.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.BlogsAdd.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.BlogsUpdate.Id
+            },
+            new RolePermission
+            {
+                RoleId = Role.SuperAdmin.Id,
+                PermissionId = Permission.BlogsDelete.Id
             });
     }
 }

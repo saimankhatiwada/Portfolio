@@ -3,7 +3,7 @@ using Portfolio.Domain.Users.Events;
 
 namespace Portfolio.Domain.Users;
 
-public sealed class User: Entity<UserId>
+public sealed class User : Entity<UserId>
 {
     private readonly List<Role> _roles = [];
 

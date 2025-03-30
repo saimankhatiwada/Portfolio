@@ -8,4 +8,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Portfolio.Domain\Portfolio.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Blogs\AddBlog\" />
+    <Folder Include="Blogs\GetBlogs\" />
+    <Folder Include="Blogs\GetBlog\" />
+    <Folder Include="Blogs\DeleteBlog\" />
+    <Folder Include="Blogs\UpdateBlog\" />
+  </ItemGroup>
 </Project>

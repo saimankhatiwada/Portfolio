@@ -19,6 +19,8 @@ using Portfolio.Application.Abstractions.Clock;
 using Portfolio.Application.Abstractions.Data;
 using Portfolio.Application.Abstractions.Storage;
 using Portfolio.Domain.Abstractions;
+using Portfolio.Domain.Blogs;
+using Portfolio.Domain.Tags;
 using Portfolio.Domain.Users;
 using Portfolio.Infrastructure.Authentication;
 using Portfolio.Infrastructure.Authorization;
@@ -75,6 +77,10 @@ public static class DependencyInjection
             .UseSnakeCaseNamingConvention());
 
         services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<ITagRepository, TagRepository>();
+
+        services.AddScoped<IBlogRepository, BlogRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
@@ -204,5 +210,8 @@ public static class DependencyInjection
 
         services.AddSingleton<ISortMappingDefinition, SortMappingDefinition<User>>(_ =>
             UserSortMapping.SortMapping);
+
+        services.AddSingleton<ISortMappingDefinition, SortMappingDefinition<Tag>>(_ =>
+            TagSortMapping.SortMapping);
     }
 }

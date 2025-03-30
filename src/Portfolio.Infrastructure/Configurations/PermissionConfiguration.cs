@@ -17,6 +17,16 @@ internal sealed class PermissionConfiguration : IEntityTypeConfiguration<Permiss
             Permission.UsersRead,
             Permission.UsersReadSingle,
             Permission.UsersUpdate,
-            Permission.UsersDelete);
+            Permission.UsersDelete,
+            Permission.TagsRead,
+            Permission.TagsReadSingle,
+            Permission.TagsAdd,
+            Permission.TagsUpdate,
+            Permission.TagsDelete,
+            Permission.BlogsRead,
+            Permission.BlogsReadSingle,
+            Permission.BlogsAdd,
+            Permission.BlogsUpdate,
+            Permission.BlogsDelete);
     }
 }

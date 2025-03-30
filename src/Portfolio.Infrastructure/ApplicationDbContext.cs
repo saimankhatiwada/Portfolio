@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Npgsql;
 using Portfolio.Application.Abstractions.Clock;
 using Portfolio.Application.Exceptions;
 using Portfolio.Domain.Abstractions;
+using Portfolio.Domain.Blogs;
+using Portfolio.Domain.Tags;
 using Portfolio.Domain.Users;
 using Portfolio.Infrastructure.Outbox;
 
@@ -17,6 +20,9 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork
 
     private readonly IDateTimeProvider _dateTimeProvider;
     public DbSet<User> Users { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<Blog> Blogs { get; set; }
+    public DbSet<BlogTag> BlogsTags { get; set; }
 
     public ApplicationDbContext(DbContextOptions options, IDateTimeProvider dateTimeProvider) : base(options)
     {
@@ -43,6 +49,11 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork
         catch (DbUpdateConcurrencyException ex)
         {
             throw new ConcurrencyException("Concurrency exception occurred.", ex);
+        }
+        catch (DbUpdateException ex) 
+            when (ex.InnerException is Npgsql.PostgresException { SqlState: "23505" })
+        {
+            throw new UniqueConstraintViolationException("Uniqueness violation occured", ex);
         }
     }
 

@@ -125,7 +125,7 @@ public class UsersController : ControllerBase
         Result<UserDto> result = await _sender.Send(query, cancellationToken);
 
         if (result.IsFailure 
-            && string.Equals(result.Error.Code, UserErrors.NotFound.Code, StringComparison.OrdinalIgnoreCase))
+            && string.Equals(result.Error.Code, ErrorCodes.Users.NotFound, StringComparison.OrdinalIgnoreCase))
         {
             return Problem(
                 statusCode: StatusCodes.Status404NotFound,
@@ -164,7 +164,7 @@ public class UsersController : ControllerBase
             ? NoContent()
             : result.Value.Error.Code switch
             {
-                "User.NotFound" => Problem(
+                ErrorCodes.Users.NotFound => Problem(
                     statusCode: StatusCodes.Status404NotFound,
                     detail: result.Value.Error.Message),
                 _ => Problem(
@@ -194,7 +194,7 @@ public class UsersController : ControllerBase
             ? NoContent()
             : result.Value.Error.Code switch
             {
-                "User.NotFound" => Problem(
+                ErrorCodes.Users.NotFound => Problem(
                     statusCode: StatusCodes.Status404NotFound, 
                     detail: result.Value.Error.Message),
                 _ => Problem(
@@ -224,7 +224,7 @@ public class UsersController : ControllerBase
                 q = usersQueryParameters.Search,
                 sort = usersQueryParameters.Sort,
                 fields = usersQueryParameters.Fields,
-                page = usersQueryParameters.Page,
+                page = usersQueryParameters.Page + 1,
                 pageSize = usersQueryParameters.PageSize,
             }));
         }
@@ -236,7 +236,7 @@ public class UsersController : ControllerBase
                 q = usersQueryParameters.Search,
                 sort = usersQueryParameters.Sort,
                 fields = usersQueryParameters.Fields,
-                page = usersQueryParameters.Page,
+                page = usersQueryParameters.Page - 1,
                 pageSize = usersQueryParameters.PageSize,
             }));
         }

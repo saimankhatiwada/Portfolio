@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Api.MediaTypes;
+using Portfolio.Api.Utils;
 using Portfolio.Application.Model.Auth.Login;
 using Portfolio.Application.Model.Auth.Refresh;
 using Portfolio.Application.Model.Auth.Register;
@@ -75,7 +76,7 @@ public class AuthController : ControllerBase
             ? Ok(result.Value)
             : result.Error.Code switch
             {
-                "User.EmailConflict" => Problem(
+                ErrorCodes.Users.EmailConflict => Problem(
                     statusCode: StatusCodes.Status409Conflict,
                     detail: result.Error.Message),
                 _ => Problem(
