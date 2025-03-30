@@ -22,7 +22,7 @@ internal sealed class UpdateTagCommandHandler : ICommandHandler<UpdateTagCommand
 
         if (tag is null)
         {
-            return Result.Failure<Result>(TagErrors.NotFound);
+            return Result.Failure(TagErrors.NotFound);
         }
 
         tag.UpdateTag(new Name(request.Name), request.Description is null 
@@ -37,7 +37,7 @@ internal sealed class UpdateTagCommandHandler : ICommandHandler<UpdateTagCommand
         }
         catch (UniqueConstraintViolationException)
         {
-            return Result.Failure<Result>(TagErrors.Conflict);
+            return Result.Failure(TagErrors.Conflict);
         }
 
         return Result.Success();

@@ -21,7 +21,7 @@ internal sealed class DeleteTagCommandHandler : ICommandHandler<DeleteTagCommand
 
         if (tag is null)
         {
-            return Result.Failure<Result>(TagErrors.NotFound);
+            return Result.Failure(TagErrors.NotFound);
         }
 
         _tagRepository.Delete(tag);

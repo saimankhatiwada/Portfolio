@@ -203,13 +203,13 @@ public class TagsController : ControllerBase
             {
                 ErrorCodes.Tags.Conflict => Problem(
                     statusCode: StatusCodes.Status409Conflict,
-                    detail: result.Error.Message),
+                    detail: result.Value.Error.Message),
                 ErrorCodes.Tags.NotFound => Problem(
                     statusCode: StatusCodes.Status404NotFound,
-                    detail: result.Error.Message),
+                    detail: result.Value.Error.Message),
                 _ => Problem(
                     statusCode: StatusCodes.Status400BadRequest,
-                    detail: result.Error.Message)
+                    detail: result.Value.Error.Message)
             };
     }
 
@@ -236,10 +236,10 @@ public class TagsController : ControllerBase
             {
                 ErrorCodes.Tags.NotFound => Problem(
                     statusCode: StatusCodes.Status404NotFound,
-                    detail: result.Error.Message),
+                    detail: result.Value.Error.Message),
                 _ => Problem(
                     statusCode: StatusCodes.Status400BadRequest,
-                    detail: result.Error.Message)
+                    detail: result.Value.Error.Message)
             };
     }
 
